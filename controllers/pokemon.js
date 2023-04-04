@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
+const axios = require('axios'); 
 
 // GET /pokemon - return a page with favorited Pokemon
 router.get('/', async (req, res) => {
@@ -15,6 +16,22 @@ router.get('/', async (req, res) => {
   }
   
 });
+
+// GET /pokemon/:name
+router.get('/:name', async (req, res) => {
+  try {
+    await axios.get(`https://pokeapi.co/api/v2/pokemon/bulbasaur`).then(apiResponse => {
+      let foundPokemon = apiResponse.data
+
+      console.log(apiResponse.data)
+      res.render('pokemon/show', {
+        pokemon: foundPokemon
+      })
+    })
+  } catch(err) {
+    console.log(err)
+  }
+})
 
 // POST /pokemon - receive the name of a pokemon and add it to the database
 router.post('/', async (req, res) => {
