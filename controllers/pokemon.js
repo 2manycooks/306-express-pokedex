@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 // GET /pokemon/:name
 router.get('/:name', async (req, res) => {
   try {
-    await axios.get(`https://pokeapi.co/api/v2/pokemon/bulbasaur`).then(apiResponse => {
+    await axios.get(`https://pokeapi.co/api/v2/pokemon/${req.params.name}`).then(apiResponse => {
       let foundPokemon = apiResponse.data
 
       console.log(apiResponse.data)
