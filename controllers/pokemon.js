@@ -1,51 +1,39 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../models');
+const db = require('../models')
 const axios = require('axios'); 
 
 // GET /pokemon - return a page with favorited Pokemon
 router.get('/', async (req, res) => {
-  // TODO: Get all records from the DB and render to view
-  try{
-    const foundPokeFaves = await db.pokemon.findAll()
-    res.render('pokemon/index', {
-      pokemon: foundPokeFaves
-    })
-  } catch(err) {
-    console.log(err)
-  }
   
+  let allFavePokemon = await db.pokemon.findAll()
+  console.log(allFavePokemon)
+
+  res.render('pokemon/index', {
+    pokemon: allFavePokemon
+  })
 });
 
-// GET /pokemon/:name
-router.get('/:name', async (req, res) => {
-  try {
-    await axios.get(`https://pokeapi.co/api/v2/pokemon/bulbasaur`).then(apiResponse => {
-      let foundPokemon = apiResponse.data
+// GET /pokemon/name - return a page with info on a specific pokemon
 
-      console.log(apiResponse.data)
-      res.render('pokemon/show', {
-        pokemon: foundPokemon
-      })
+router.get('/:name', async (req, res) => {
+
+  axios.get(`https://pokeapi.co/api/v2/pokemon/${req.params.name}`).then(apiResponse => {
+    let pokemon = apiResponse.data
+    console.log(pokemon)
+    res.render('pokemon/show', {
+      pokemon: pokemon,
+      officialArt: pokemon.sprites.other["official-artwork"].front_default
     })
-  } catch(err) {
-    console.log(err)
-  }
+  })
 })
 
 // POST /pokemon - receive the name of a pokemon and add it to the database
 router.post('/', async (req, res) => {
-  // TODO: Get form data and add a new record to DB
-  try{
-    const newPokemon = await db.pokemon.create({
-      name: req.body.name
-    })
-    console.log(`made new pokemon ${newPokemon}`)
-    res.redirect('pokemon')
-  } catch(err) {
-    console.log(err)
-  }
-  // res.send(req.body);
+  let newPokemon = await db.pokemon.create({name: req.body.name})
+  console.log(newPokemon)
+
+  res.redirect('/pokemon')
 });
 
 module.exports = router;

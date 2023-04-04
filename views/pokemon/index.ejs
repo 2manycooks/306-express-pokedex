@@ -1,9 +1,13 @@
-<h2> Fave Pokemon</h2>
+<h1>Fave pokemon</h1>
 
 <ul>
-    <% pokemon.forEach(function(pokemon) { %>
-        <div>
-            <li><%= pokemon.name %></li>
-        </div>
-    <%}) %>
+
+<% pokemon.forEach(function(pokemon) { %>
+
+    <li>
+        <%= pokemon.name %>
+    </li>
+
+<%}) %>
+
 </ul>
